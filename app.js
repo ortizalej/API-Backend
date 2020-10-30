@@ -38,11 +38,35 @@ app.post('/getTableData', (req, res) => {
 })
 
 app.post('/getUsers', (req, res) => {
-    //Login y get lista de users
+
+    var page = req.query.page ? req.query.page : 1
+    var limit = req.query.limit ? req.query.limit : 10;
+    try {
+        var Users = await UserService.getUsers({}, page, limit)
+        // Return the Users list with the appropriate HTTP password Code and Message.
+        return res.status(200).json({status: 200, data: Users, message: "Succesfully Users Recieved"});
+    } catch (e) {
+        //Return an Error Response Message with Code and the Error Message.
+        return res.status(400).json({status: 400, message: e.message});
+    }
+
 })
 
 app.post('/loginUser',(req,res) => {
-    //Login User
+    console.log("body",req.body)
+    var user = new userSchema({
+        username: req.body.username,
+        password: req.body.password
+    })
+
+    try {
+        // Calling the Service function with the new object from the Request Body
+        var loginUser = await UserService.loginUser(user);
+        return res.status(201).json({loginUser, message: "Succesfully login"})
+    } catch (e) {
+        //Return an Error Response Message with Code and the Error Message.
+        return res.status(400).json({status: 400, message: "Invalid username or password"})
+    }
 })
 
 app.post('/createUser', (req, res) => {

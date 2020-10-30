@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+var mongoosePaginate = require('mongoose-paginate')
 
 const optionsSchema = new mongoose.Schema({
     selected: Boolean,
@@ -35,7 +36,11 @@ const surveySchema = new mongoose.Schema({
     questions: [questionSchema]
 })
 
-mongoose.model("user", userSchema)
+UserSchema.plugin(mongoosePaginate)
+
+const User =mongoose.model("user", userSchema)
 mongoose.model("question", questionSchema)
 mongoose.model("survey", surveySchema)
 mongoose.model("table", tableSchema)
+
+module.exports = User;
