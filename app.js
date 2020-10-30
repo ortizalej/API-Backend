@@ -41,6 +41,9 @@ app.post('/getUsers', (req, res) => {
     //Login y get lista de users
 })
 
+app.post('/loginUser',(req,res) => {
+})
+
 app.post('/createUser', (req, res) => {
     //crear Usuario
 
