@@ -39,3 +39,19 @@ exports.getUsers = async function (query, page, limit) {
         throw Error('Error while Paginating Users');
     }
 }
+
+exports.deleteUser= async function (id) {
+
+    // Delete the User
+    try {
+        var deleted = await User.remove({
+            _id: id
+        })
+        if (deleted.n === 0 && deleted.ok === 1) {
+            throw Error("User Could not be deleted")
+        }
+        return deleted;
+    } catch (e) {
+        throw Error("Error Occured while Deleting the User")
+    }
+}
