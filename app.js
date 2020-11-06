@@ -102,7 +102,14 @@ app.post('/updateUser', (req, res) => {
 })
 
 app.delete('/deleteUser', (req, res) => {
-    //borrar Usuario
+    var id = req.params.id;
+    try {
+        var deleted = UserService.deleteUser(id);
+        res.status(200).send("User Succesfully Deleted");
+    } catch (e) {
+        return res.status(400).json({status: 400, message: e.message})
+    }
+
 })
 
 
