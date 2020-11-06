@@ -37,12 +37,12 @@ app.post('/getTableData', (req, res) => {
     //Llamar en el render del Home()
 })
 
-app.post('/getUsers', (req, res) => {
+app.get('/getUsers', (req, res) => {
 
     var page = req.query.page ? req.query.page : 1
     var limit = req.query.limit ? req.query.limit : 10;
     try {
-        var Users = await UserService.getUsers({}, page, limit)
+        var Users = UserService.getUsers({}, page, limit)
         // Return the Users list with the appropriate HTTP password Code and Message.
         return res.status(200).json({status: 200, data: Users, message: "Succesfully Users Recieved"});
     } catch (e) {
@@ -61,7 +61,7 @@ app.post('/loginUser',(req,res) => {
 
     try {
         // Calling the Service function with the new object from the Request Body
-        var loginUser = await UserService.loginUser(user);
+        var loginUser = UserService.loginUser(user);
         return res.status(201).json({loginUser, message: "Succesfully login"})
     } catch (e) {
         //Return an Error Response Message with Code and the Error Message.

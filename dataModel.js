@@ -36,7 +36,7 @@ const surveySchema = new mongoose.Schema({
     questions: [questionSchema]
 })
 
-UserSchema.plugin(mongoosePaginate)
+userSchema.plugin(mongoosePaginate)
 
 const User =mongoose.model("user", userSchema)
 mongoose.model("question", questionSchema)
