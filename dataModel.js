@@ -37,10 +37,12 @@ const surveySchema = new mongoose.Schema({
 })
 
 userSchema.plugin(mongoosePaginate)
+surveySchema.plugin(mongoosePaginate)
 
 const User =mongoose.model("user", userSchema)
+const Survey=mongoose.model("survey", surveySchema)
 mongoose.model("question", questionSchema)
-mongoose.model("survey", surveySchema)
 mongoose.model("table", tableSchema)
 
 module.exports = User;
+module.exports = Survey;

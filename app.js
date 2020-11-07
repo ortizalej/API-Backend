@@ -1,3 +1,6 @@
+var UserService = require('./services/user.service');
+var SurveyService= require('./services/survey.service');
+
 const express = require('express')
 const bodyParser = require("body-parser")
 const mongoose = require('mongoose')
@@ -31,6 +34,19 @@ app.post('/updateEncuesta', (req, res) => {
 
 app.post('/getEncuesta', (req, res) => {
     //Buscar por Empresa-Encuesta
+    var page = req.query.page ? req.query.page : 1
+    var limit = req.query.limit ? req.query.limit : 10;
+    let id_encuesta= {id: req.body.id}
+
+    try {
+        var encuesta = SurveyService.getEncuesta(id_encuesta, page, limit)
+        return res.status(200).json({status: 200, data: encuesta, message: "Succesfully Survey Recieved"});
+    } catch (e) {
+        //Return an Error Response Message with Code and the Error Message.
+        return res.status(400).json({status: 400, message: e.message});
+    }
+
+
 })
 
 app.post('/getTableData', (req, res) => {
