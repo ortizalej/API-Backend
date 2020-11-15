@@ -29,7 +29,23 @@ app.get('/', (req, res) => {
 
 
 app.post('/updateEncuesta', (req, res) => {
-    //Update a la tabla y la encuesta el estado
+    
+    // Id is necessary for the update
+    if (!req.body.id) {
+        return res.status(400).json({status: 400., message: "ID must be present"})
+    }
+    
+    var encuesta = {
+        id: req.body.id ? req.body.id : null,
+        question: req.body.questions ? req.body.questions : null
+    }
+    try {
+        var updEncuesta = surveyService.updateSurvey(encuesta)
+        return res.status(200).json({status: 200, data: updEncuesta, message: "Succesfully Updated Survey"})
+    } catch (e) {
+        return res.status(400).json({status: 400., message: e.message})
+    }
+
 })
 
 app.post('/getEncuesta', (req, res) => {
