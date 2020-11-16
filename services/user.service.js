@@ -22,24 +22,6 @@ exports.loginUser = async function (user) {
 
 }
 
-exports.getUsers = async function (query, page, limit) {
-    var options = {
-        page,
-        limit
-    }
-
-    try {
-        console.log("Query",query)
-        var Users = await User.paginate(query, options)
-        // Return the Userd list that was retured by the mongoose promise
-        return Users;
-
-    } catch (e) {
-        // return a Error message describing the reason 
-        throw Error('Error while Paginating Users');
-    }
-}
-
 exports.deleteUser= async function (id) {
 
     // Delete the User

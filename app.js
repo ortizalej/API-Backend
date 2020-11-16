@@ -5,12 +5,13 @@ const express = require('express')
 const bodyParser = require("body-parser")
 const mongoose = require('mongoose')
 const http = require('http');
+const User = require('./dataModel');
 require('./dataModel')
 const app = express()
 
 app.use(bodyParser.json())
 
-const userSchema = mongoose.model('user')
+const userSchema = mongoose.model('users')
 const questionSchema = mongoose.model('question')
 
 const mongouri = 'mongodb+srv://ortizalej:24472872@api.hfxha.mongodb.net/test?retryWrites=true&w=majority';
@@ -71,12 +72,13 @@ app.post('/getTableData', (req, res) => {
 
 app.get('/getUsers', (req, res) => {
 
-    var page = req.query.page ? req.query.page : 1
-    var limit = req.query.limit ? req.query.limit : 10;
     try {
-        var Users = UserService.getUsers({}, page, limit)
+        User.find(function(err, users) {
+            console.log('USERS', users)
+            console.log('ERROR', err)
+            return res.status(200).json({status: 200, data: users, message: "Succesfully Users Recieved"});
+        })
         // Return the Users list with the appropriate HTTP password Code and Message.
-        return res.status(200).json({status: 200, data: Users, message: "Succesfully Users Recieved"});
     } catch (e) {
         //Return an Error Response Message with Code and the Error Message.
         return res.status(400).json({status: 400, message: e.message});
@@ -85,16 +87,20 @@ app.get('/getUsers', (req, res) => {
 })
 
 app.post('/loginUser',(req,res) => {
-    console.log("body",req.body)
-    var user = new userSchema({
-        username: req.body.username,
-        password: req.body.password
-    })
-
     try {
         // Calling the Service function with the new object from the Request Body
-        var loginUser = UserService.loginUser(user);
-        return res.status(201).json({loginUser, message: "Succesfully login"})
+        User.findOne({
+            username: req.body.username,
+            password: req.body.password
+        },function(err,user){
+            console.log(user)
+            if(user) {
+                return res.status(201).json({message: "Succesfully login"})
+            } else {
+                return res.status(400).json({message: "Dont exist the user"})
+
+            }
+        });        
     } catch (e) {
         //Return an Error Response Message with Code and the Error Message.
         return res.status(400).json({status: 400, message: "Invalid username or password"})
