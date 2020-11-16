@@ -36,7 +36,7 @@ mongoose.connect(mongouri, {
 //     next();
 // });
 app.use(cors({origin: '*'}));
-
+app.use(bodyParser.json())
 mongoose.connection.on("connected", () => console.log("connected to mongo"))
 mongoose.connection.on("error", (err) => console.log("error ", err))
 
