@@ -93,7 +93,7 @@ app.post('/loginUser', (req, res) => {
         }, function (err, user) {
             console.log(user)
             if (user) {
-                return res.status(201).json({ message: "Succesfully login", data: users })
+                return res.status(201).json({ message: "Succesfully login", data: user })
             } else {
                 return res.status(400).json({ message: "Dont exist the user" })
 
