@@ -8,9 +8,6 @@ const http = require('http');
 const User = require('./dataModel');
 require('./dataModel')
 const app = express()
-
-app.use(bodyParser.json())
-
 const userSchema = mongoose.model('users')
 const questionSchema = mongoose.model('question')
 
@@ -21,23 +18,14 @@ mongoose.connect(mongouri, {
     useUnifiedTopology: true
 })
 app.use(function (req, res, next) {
-
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-
-    // Request methods you wish to allow
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    // Pass to next layer of middleware
+    bodyParser.json()
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
+
 mongoose.connection.on("connected", () => console.log("connected to mongo"))
 mongoose.connection.on("error", (err) => console.log("error ", err))
 
