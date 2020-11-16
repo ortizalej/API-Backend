@@ -91,9 +91,9 @@ app.post('/loginUser', (req, res) => {
             username: req.body.username,
             password: req.body.password
         }, function (err, user) {
-            console.log(user)
+            console.log('USER',user)
             if (user) {
-                return res.status(201).json({ message: "Succesfully login", data: user })
+                return res.status(201).json({ message: "Succesfully login" })
             } else {
                 return res.status(400).json({ message: "Dont exist the user" })
 
