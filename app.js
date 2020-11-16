@@ -1,6 +1,6 @@
 var UserService = require('./services/user.service');
 var SurveyService = require('./services/survey.service');
-
+var cors = require('cors');
 const express = require('express')
 const bodyParser = require("body-parser")
 const mongoose = require('mongoose')
@@ -17,14 +17,25 @@ mongoose.connect(mongouri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-app.use(function (req, res, next) {
-    bodyParser.json()
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-    next();
-});
+// app.use(function (req, res, next) {
+//     bodyParser.json()
+//     // Website you wish to allow to connect
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
+
+//     // Request methods you wish to allow
+//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+//     // Request headers you wish to allow
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+//     // Set to true if you need the website to include cookies in the requests sent
+//     // to the API (e.g. in case you use sessions)
+//     res.setHeader('Access-Control-Allow-Credentials', true);
+
+//     // Pass to next layer of middleware
+//     next();
+// });
+app.use(cors({origin: '*'}));
 
 mongoose.connection.on("connected", () => console.log("connected to mongo"))
 mongoose.connection.on("error", (err) => console.log("error ", err))
@@ -38,7 +49,7 @@ app.post('/updateEncuesta', (req, res) => {
 
     // Id is necessary for the update
     if (!req.body.id) {
-        return res.status(400).json({ status: 400., message: "ID must be present" })
+        return res.status(400).json({ status: 400, message: "ID must be present" })
     }
 
     var encuesta = {
