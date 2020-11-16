@@ -17,24 +17,6 @@ mongoose.connect(mongouri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-// app.use(function (req, res, next) {
-//     bodyParser.json()
-//     // Website you wish to allow to connect
-//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8888');
-
-//     // Request methods you wish to allow
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-//     // Request headers you wish to allow
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-//     // Set to true if you need the website to include cookies in the requests sent
-//     // to the API (e.g. in case you use sessions)
-//     res.setHeader('Access-Control-Allow-Credentials', true);
-
-//     // Pass to next layer of middleware
-//     next();
-// });
 app.use(cors({origin: '*'}));
 app.use(bodyParser.json())
 mongoose.connection.on("connected", () => console.log("connected to mongo"))
@@ -111,7 +93,7 @@ app.post('/loginUser', (req, res) => {
         }, function (err, user) {
             console.log(user)
             if (user) {
-                return res.status(201).json({ message: "Succesfully login" })
+                return res.status(201).json({ message: "Succesfully login", data: users })
             } else {
                 return res.status(400).json({ message: "Dont exist the user" })
 
