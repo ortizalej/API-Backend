@@ -129,11 +129,12 @@ app.post('/updateUser', (req, res) => {
         password: req.body.password,
         role: req.body.role
     })
-    let query = { 'username': req.body.userData.username };
+    console.log('REQ BODY', req.body)
+    let query = { 'username': req.body.username };
 
     user.updateOne(query, req.body.newData, { upsert: true }, function (err, doc) {
-        if (err) return res.send(500, { error: err });
-        return res.send('Succesfully saved.');
+        if (err) res.status(400).json({ status: "error" });
+        return res.status(201).json({ message: "Succesfully update", data:doc })
     });
 })
 
