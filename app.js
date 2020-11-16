@@ -116,10 +116,10 @@ app.post('/createUser', (req, res) => {
     user.save().
         then(data => {
             console.log(data)
-            res.send({ status: "success" })
+            return res.status(201).json({ message: "Succesfully created", data:data })
         }).catch(err => {
             console.log(err)
-            res.send({ status: "error" })
+            return res.status(400).json({ status: "error" })
         })
 })
 
