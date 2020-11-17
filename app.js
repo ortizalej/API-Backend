@@ -124,15 +124,11 @@ app.post('/createUser', (req, res) => {
 })
 
 app.post('/updateUser', (req, res) => {
-    const user = new userSchema({
-        username: req.body.username,
-        password: req.body.password,
-        role: req.body.role
-    })
-    console.log('REQ BODY', req.body)
-    let query = { 'username': req.body.username };
 
-    user.findOneAndUpdate(query, req.body, {upsert: true}).then(data => {
+    console.log('REQ BODY', req.body)
+    let query = { '_id': req.body._id };
+
+    User.findOneAndUpdate(query, req.body, {upsert: true}).then(data => {
         console.log(data)
         return res.status(201).json({ message: "Succesfully created", data:data })
     }).catch(err => {
