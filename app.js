@@ -5,11 +5,13 @@ const express = require('express')
 const bodyParser = require("body-parser")
 const mongoose = require('mongoose')
 const http = require('http');
+const axios = require('axios');
 const User = require('./dataModel');
+const Survey = require('./dataModelSurvey');
 require('./dataModel')
+require('./dataModelSurvey')
 const app = express()
 const userSchema = mongoose.model('users')
-const questionSchema = mongoose.model('question')
 
 const mongouri = 'mongodb+srv://ortizalej:24472872@api.hfxha.mongodb.net/test?retryWrites=true&w=majority';
 
@@ -47,15 +49,28 @@ app.post('/updateEncuesta', (req, res) => {
 
 })
 
-app.post('/getEncuesta', (req, res) => {
-    //Buscar por Empresa-Encuesta
-    var page = req.query.page ? req.query.page : 1
-    var limit = req.query.limit ? req.query.limit : 10;
-    let id_encuesta = { id: req.body.id }
+app.post('/getSurveys', (req, res) => {
 
     try {
-        var encuesta = SurveyService.getEncuesta(id_encuesta, page, limit)
-        return res.status(200).json({ status: 200, data: encuesta, message: "Succesfully Survey Recieved" });
+        axios.get('https://observatorio-pyme-answer-back.herokuapp.com/external-api/polls', {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+                'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',
+                'x-api-key': '5CD4ED173E1C95FE763B753A297D5',
+                'accept': 'application/json'
+            }
+        })
+            .then(function (response) {
+                console.log(response)
+                return res.status(200).json({ status: 200, data: response.data, message: "Succesfully Surveys Recieved" });
+                // Survey.find(function (err, survey) {
+                //     return res.status(200).json({ status: 200, data: survey, message: "Succesfully Users Recieved" });
+                // })
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
     } catch (e) {
         //Return an Error Response Message with Code and the Error Message.
         return res.status(400).json({ status: 400, message: e.message });

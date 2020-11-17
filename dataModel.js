@@ -40,7 +40,7 @@ userSchema.plugin(mongoosePaginate)
 surveySchema.plugin(mongoosePaginate)
 
 const User =mongoose.model("users", userSchema)
-const Survey=mongoose.model("survey", surveySchema)
+const Survey = mongoose.model("survey", surveySchema)
 mongoose.model("question", questionSchema)
 mongoose.model("table", tableSchema)
 
