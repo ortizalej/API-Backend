@@ -140,7 +140,7 @@ app.post('/updateUser', (req, res) => {
 app.delete('/deleteUser', (req, res) => {
     try {
         var deleted = User.remove({
-            username: req.body.username
+            _id: req.body._id
         })
         
         res.status(200).send("User Succesfully Deleted");
