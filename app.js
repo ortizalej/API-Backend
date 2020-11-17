@@ -132,7 +132,7 @@ app.post('/updateUser', (req, res) => {
     console.log('REQ BODY', req.body)
     let query = { 'username': req.body.username };
 
-    user.update(query, req.body).then(data => {
+    user.findOneAndUpdate(query, req.body, {upsert: true}).then(data => {
         console.log(data)
         return res.status(201).json({ message: "Succesfully created", data:data })
     }).catch(err => {
