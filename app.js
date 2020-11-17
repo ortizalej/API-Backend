@@ -17,7 +17,7 @@ mongoose.connect(mongouri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
-app.use(cors({origin: '*'}));
+app.use(cors({ origin: '*' }));
 app.use(bodyParser.json())
 mongoose.connection.on("connected", () => console.log("connected to mongo"))
 mongoose.connection.on("error", (err) => console.log("error ", err))
@@ -90,9 +90,9 @@ app.post('/loginUser', (req, res) => {
             username: req.body.username,
             password: req.body.password
         }, function (err, user) {
-            console.log('USER',user)
+            console.log('USER', user)
             if (user) {
-                return res.status(201).json({ message: "Succesfully login", data:user})
+                return res.status(201).json({ message: "Succesfully login", data: user })
             } else {
                 return res.status(400).json({ message: "Dont exist the user" })
 
@@ -115,7 +115,7 @@ app.post('/createUser', (req, res) => {
     user.save().
         then(data => {
             console.log(data)
-            return res.status(201).json({ message: "Succesfully created", data:data })
+            return res.status(201).json({ message: "Succesfully created", data: data })
         }).catch(err => {
             console.log(err)
             return res.status(400).json({ status: "error" })
@@ -129,20 +129,26 @@ app.post('/updateUser', (req, res) => {
 
     User.findOneAndUpdate(query, req.body).then(data => {
         console.log(data)
-        return res.status(201).json({ message: "Succesfully created", data:data })
+        return res.status(201).json({ message: "Succesfully created", data: data })
     }).catch(err => {
         console.log(err)
         return res.status(400).json({ status: "error" })
     })
-        
+
 })
 
 app.delete('/deleteUser', (req, res) => {
     try {
-        var deleted = User.remove({
+        User.remove({
             _id: req.body._id
+        }).then(data => {
+            console.log(data)
+            return res.status(201).json({ message: "Succesfully deleted", data: data })
+        }).catch(err => {
+            console.log(err)
+            return res.status(400).json({ status: "error" })
         })
-        
+
         res.status(200).send("User Succesfully Deleted");
     } catch (e) {
         return res.status(400).json({ status: 400, message: e.message })
