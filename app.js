@@ -139,9 +139,7 @@ app.post('/updateUser', (req, res) => {
 
 app.delete('/deleteUser', (req, res) => {
     try {
-        User.findOneAndDelete({
-            _id: req.body._id
-        }).then(data => {
+        User.findByIdAndDelete(req.body._id).then(data => {
             console.log(data)
             return res.status(201).json({ message: "Succesfully deleted", data: data })
         }).catch(err => {
