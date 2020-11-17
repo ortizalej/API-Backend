@@ -48,7 +48,7 @@ app.post('/updateEncuesta', (req, res) => {
 
 })
 
-app.post('/getSurveys', (req, res) => {
+app.get('/getSurveys', (req, res) => {
 
     try {
         axios.get('https://observatorio-pyme-answer-back.herokuapp.com/external-api/polls', {
