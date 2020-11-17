@@ -137,7 +137,7 @@ app.post('/updateUser', (req, res) => {
 
 })
 
-app.delete('/deleteUser', (req, res) => {
+app.post('/deleteUser', (req, res) => {
     try {
         console.log(req.body)
         User.findByIdAndDelete(req.body._id).then(data => {
