@@ -72,8 +72,7 @@ app.get('/getUsers', (req, res) => {
 
     try {
         User.find(function (err, users) {
-            console.log('USERS', users)
-            console.log('ERROR', err)
+
             return res.status(200).json({ status: 200, data: users, message: "Succesfully Users Recieved" });
         })
         // Return the Users list with the appropriate HTTP password Code and Message.
@@ -128,7 +127,7 @@ app.post('/updateUser', (req, res) => {
     console.log('REQ BODY', req.body)
     let query = { '_id': req.body._id };
 
-    User.findOneAndUpdate(query, req.body, {upsert: true}).then(data => {
+    User.findOneAndUpdate(query, req.body).then(data => {
         console.log(data)
         return res.status(201).json({ message: "Succesfully created", data:data })
     }).catch(err => {
