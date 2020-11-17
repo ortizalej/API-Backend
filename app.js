@@ -132,7 +132,7 @@ app.post('/updateUser', (req, res) => {
     console.log('REQ BODY', req.body)
     let query = { 'username': req.body.username };
 
-    user.updateOne(query, req.body.newData, { upsert: true }, function (err, doc) {
+    user.update(query, req.body, function (err, doc) {
         if (err) res.status(400).json({ status: "error" });
         return res.status(201).json({ message: "Succesfully update", data:doc })
     });
