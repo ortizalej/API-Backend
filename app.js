@@ -8,6 +8,7 @@ const http = require('http');
 const axios = require('axios');
 const User = require('./dataModel');
 require('./dataModel')
+require('./modelParser')
 // require('./dataModelSurvey')
 const app = express()
 const userSchema = mongoose.model('users')
@@ -28,24 +29,32 @@ app.get('/', (req, res) => {
 })
 
 
-app.post('/updateEncuesta', (req, res) => {
-
+app.post('/updateSurvey', (req, res) => {
     // Id is necessary for the update
-    if (!req.body.id) {
-        return res.status(400).json({ status: 400, message: "ID must be present" })
-    }
+    console.log('REQ BODY', req.body)
+    let query = { '_id': req.body._id };
 
-    var encuesta = {
-        id: req.body.id ? req.body.id : null,
-        question: req.body.questions ? req.body.questions : null
-    }
-    try {
-        var updEncuesta = surveyService.updateSurvey(encuesta)
-        return res.status(200).json({ status: 200, data: updEncuesta, message: "Succesfully Updated Survey" })
-    } catch (e) {
-        return res.status(400).json({ status: 400., message: e.message })
-    }
+    Survey.findOneAndUpdate(query, req.body).then(data => {
+        console.log(data)
+        return res.status(201).json({ message: "Succesfully update", data: data })
+    }).catch(err => {
+        console.log(err)
+        return res.status(400).json({ status: "error" })
+    })
+})
 
+app.post('/sendEmail', (req, res) => {
+    // Id is necessary for the update
+    console.log('REQ BODY', req.body)
+    let query = { '_id': req.body._id };
+
+    Survey.findOneAndUpdate(query, req.body).then(data => {
+        console.log(data)
+        return res.status(201).json({ message: "Succesfully update", data: data })
+    }).catch(err => {
+        console.log(err)
+        return res.status(400).json({ status: "error" })
+    })
 })
 
 app.get('/getSurveys', (req, res) => {
@@ -62,10 +71,8 @@ app.get('/getSurveys', (req, res) => {
         })
             .then(function (response) {
                 console.log(response)
+                mapToInternalModel(response.data)
                 return res.status(200).json({ status: 200, data: response.data, message: "Succesfully Surveys Recieved" });
-                // Survey.find(function (err, survey) {
-                //     return res.status(200).json({ status: 200, data: survey, message: "Succesfully Users Recieved" });
-                // })
             })
             .catch(function (error) {
                 console.log(error);
@@ -74,13 +81,8 @@ app.get('/getSurveys', (req, res) => {
         //Return an Error Response Message with Code and the Error Message.
         return res.status(400).json({ status: 400, message: e.message });
     }
-
-
 })
 
-app.post('/getTableData', (req, res) => {
-    //Llamar en el render del Home()
-})
 
 app.get('/getUsers', (req, res) => {
 
