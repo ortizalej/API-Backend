@@ -1,5 +1,5 @@
 
-export function mapToInternalModel(data) {
+module.exports = function mapToInternalModel(data) {
     let questions;
     data.sections.map((x) => {
         x.questions.map((y) => {
@@ -19,7 +19,7 @@ export function mapToInternalModel(data) {
     return internalModel;
 }
 
-export function chooseType(data) {
+function chooseType(data) {
     switch (data) {
         case "TEXT": return 1;
         case "SELECT": return 2;
@@ -29,7 +29,7 @@ export function chooseType(data) {
     }
 }
 
-export function choseAnswerModel(data) {
+function choseAnswerModel(data) {
     switch (data.type) {
         case "TEXT":
             return [
