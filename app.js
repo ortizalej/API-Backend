@@ -8,7 +8,6 @@ const http = require('http');
 const axios = require('axios');
 const User = require('./dataModel');
 require('./dataModel')
-require('./modelParser')
 // require('./dataModelSurvey')
 const app = express()
 const userSchema = mongoose.model('users')
