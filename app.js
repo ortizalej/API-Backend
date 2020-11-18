@@ -71,7 +71,6 @@ app.get('/getSurveys', (req, res) => {
         })
             .then(function (response) {
                 console.log(response)
-                mapToInternalModel(response.data)
                 return res.status(200).json({ status: 200, data: response.data, message: "Succesfully Surveys Recieved" });
             })
             .catch(function (error) {
