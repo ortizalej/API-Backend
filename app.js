@@ -9,7 +9,7 @@ const axios = require('axios');
 const User = require('./dataModel');
 const Survey = require('./dataModelSurvey');
 require('./dataModel')
-require('./dataModelSurvey')
+// require('./dataModelSurvey')
 const app = express()
 const userSchema = mongoose.model('users')
 
@@ -179,10 +179,10 @@ app.get('/getSurveys', (req, res) => {
                     newResponse.push(surveyParse)
                 })
 
-                Survey.find(function (err, surveys) {
+                // Survey.find(function (err, surveys) {
 
                     return res.status(200).json({ status: 200, data: response.data, message: "Succesfully Surveys Recieved" });
-                })
+                // })
             })
             .catch(function (error) {
                 console.log(error);
