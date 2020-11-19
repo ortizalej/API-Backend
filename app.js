@@ -6,11 +6,9 @@ const http = require('http');
 const axios = require('axios');
 const User = require('./dataModel');
 const Survey = require('./dataModelSurvey');
-require('./dataModel')
-require('./dataModelSurvey')
 const app = express()
 const userSchema = mongoose.model('users')
-
+const surveySchema = mongoose.model('survey')
 const mongouri = 'mongodb+srv://ortizalej:24472872@api.hfxha.mongodb.net/test?retryWrites=true&w=majority';
 
 mongoose.connect(mongouri, {
@@ -29,8 +27,7 @@ function mapToInternalModel(data) {
     let finalModel = {}
     finalModel.company = data.company.name;
     finalModel.name = data.name
-    finalModel.id = data.id
-    console.log(data)
+    finalModel.cod = data.id
     let questions = [];
     data.sections.map((x) => {
         x.questions.map((y) => {
@@ -124,19 +121,21 @@ function choseAnswerModel(data) {
                 subQuestions.push(item)
 
             })
-            console.log('SUBQUESTIONS', subQuestions)
             return subQuestions
     }
 }
 
-function excludeExistingSurveys(pymesSurveys, databaseSurveys){
+function excludeExistingSurveys(pymesSurveys, databaseSurveys) {
+    console.log(databaseSurveys)
     let finalSurveys = [];
-    pymesSurveys.map((survey, index) => {
-        if(databaseSurveys.filter(item => item.id === survey.id).length === 0) {
-            finalSurveys.push(survey)
-        }
+    pymesSurveys.map((survey) => {
+        databaseSurveys.map((dBSurvey) => {
+            if (survey.name != dBSurvey.name && survey.company != dBSurvey.company) {
+                finalSurveys.push(survey)
+            }
+        })
     })
-
+    return finalSurveys
 }
 
 app.post('/updateSurvey', (req, res) => {
@@ -186,13 +185,13 @@ app.get('/getSurveys', (req, res) => {
                 response.data.map((survey, index) => {
                     let surveyParse = mapToInternalModel(survey)
                     newResponse.push(surveyParse)
-                })  
-
+                })
                 Survey.find(function (err, surveys) {
-                    console.log('TRAJO SURVEY',surveys)
+                    console.log('SURVEYS', surveys.length)
+                    console.log("newResponse", newResponse.length)
                     let newSurveys = excludeExistingSurveys(newResponse, surveys)
-                    newResponse.push.apply(newResponse,newSurveys);
-
+                    console.log(newSurveys.length)
+                    newResponse = newResponse.concat(newSurveys);
                     return res.status(200).json({ status: 200, data: newResponse, message: "Succesfully Surveys Recieved" });
                 })
             })
@@ -205,12 +204,11 @@ app.get('/getSurveys', (req, res) => {
     }
 })
 
-
 app.get('/getUsers', (req, res) => {
 
     try {
         User.find(function (err, users) {
-
+            console.log(User)
             return res.status(200).json({ status: 200, data: users, message: "Succesfully Users Recieved" });
         })
         // Return the Users list with the appropriate HTTP password Code and Message.

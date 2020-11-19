@@ -1,22 +1,10 @@
 const mongoose = require('mongoose')
 
-
 const surveySchema = new mongoose.Schema({
-    "company": {
-        "type": "String"
-    },
-    "name": {
-        "type": "String"
-    },
-    "id": {
-        "type": "ObjectId"
-    },
-    "questions": {
-        "type": [
-            "Mixed"
-        ]
-    }
-})
+    company: String,
+    name: String,
+    triste: String
+},{ collection: 'survey'})
 
 const Survey = mongoose.model("survey", surveySchema)
 
