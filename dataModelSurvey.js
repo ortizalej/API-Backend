@@ -5,6 +5,7 @@ const surveySchema = new mongoose.Schema({
     name: String,
     cod: String,
     status: String,
+    generalComment:String,
     questions: []
 },{ collection: 'survey'})
 
