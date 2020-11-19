@@ -28,6 +28,7 @@ function mapToInternalModel(data) {
     let finalModel = {}
     finalModel.company = data.company.name;
     finalModel.name = data.name
+    finalModel.id = data.id
     console.log(data)
     let questions = [];
     data.sections.map((x) => {
@@ -127,6 +128,16 @@ function choseAnswerModel(data) {
     }
 }
 
+function excludeExistingSurveys(pymesSurveys, databaseSurveys){
+    let finalSurveys = [];
+    pymesSurveys.map((survey, index) => {
+        if(databaseSurveys.filter(item => item.id === survey.id).length === 0) {
+            finalSurveys.push(survey)
+        }
+    })
+
+}
+
 app.post('/updateSurvey', (req, res) => {
     // Id is necessary for the update
     console.log('REQ BODY', req.body)
@@ -177,7 +188,10 @@ app.get('/getSurveys', (req, res) => {
                 })
 
                 Survey.find(function (err, surveys) {
-                    console.log('SURVEY', surveys)
+                    console.log('TRAJO SURVEY',surveys)
+                    let newSurveys = excludeExistingSurveys(newResponse, surveys)
+                    newResponse.push.apply(newResponse,newSurveys);
+
                     return res.status(200).json({ status: 200, data: newResponse, message: "Succesfully Surveys Recieved" });
                 })
             })
