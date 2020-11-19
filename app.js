@@ -28,6 +28,7 @@ function mapToInternalModel(data) {
     finalModel.company = data.company.name;
     finalModel.name = data.name
     finalModel.cod = data.id
+    finalModel.status = "ANSWERED";
     let questions = [];
     data.sections.map((x) => {
         x.questions.map((y) => {
@@ -213,7 +214,7 @@ app.get('/getSurveys', (req, res) => {
 app.get('/updateSurvey', (req, res) => {
 
     try {
-        let query = { 'cod': req.body.cod };
+        let query = { '_id': req.body._id };
 
         Survey.updateOne(query, req.body).then(data => {
             console.log(data)

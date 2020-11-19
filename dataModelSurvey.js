@@ -4,6 +4,7 @@ const surveySchema = new mongoose.Schema({
     company: String,
     name: String,
     cod: String,
+    status: String,
     questions: []
 },{ collection: 'survey'})
 
