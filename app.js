@@ -178,7 +178,7 @@ app.get('/getSurveys', (req, res) => {
 
                 // Survey.find(function (err, surveys) {
 
-                    return res.status(200).json({ status: 200, data: response.data, message: "Succesfully Surveys Recieved" });
+                    return res.status(200).json({ status: 200, data: newResponse, message: "Succesfully Surveys Recieved" });
                 // })
             })
             .catch(function (error) {
