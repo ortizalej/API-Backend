@@ -176,10 +176,10 @@ app.get('/getSurveys', (req, res) => {
                     newResponse.push(surveyParse)
                 })
 
-                // Survey.find(function (err, surveys) {
-
+                Survey.find(function (err, surveys) {
+                    console.log('SURVEY', surveys)
                     return res.status(200).json({ status: 200, data: newResponse, message: "Succesfully Surveys Recieved" });
-                // })
+                })
             })
             .catch(function (error) {
                 console.log(error);
