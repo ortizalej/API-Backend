@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const http = require('http');
 const axios = require('axios');
 const User = require('./dataModel');
+const Survey = require('./dataModelSurvey');
 require('./dataModel')
 require('./dataModelSurvey')
 const app = express()
