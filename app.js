@@ -186,7 +186,7 @@ app.get('/getSurveys', (req, res) => {
                 response.data.map((survey, index) => {
                     let surveyParse = mapToInternalModel(survey)
                     newResponse.push(surveyParse)
-                })
+                })  
 
                 Survey.find(function (err, surveys) {
                     console.log('TRAJO SURVEY',surveys)
