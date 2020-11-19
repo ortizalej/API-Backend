@@ -126,25 +126,30 @@ function choseAnswerModel(data) {
 }
 
 function excludeExistingSurveys(pymesSurveys, databaseSurveys) {
-    console.log(databaseSurveys)
+    let surveyPyme = pymesSurveys;
+    let DbSurveys = databaseSurveys;
+
     let finalSurveys = [];
-    pymesSurveys.map((survey) => {
-        databaseSurveys.map((dBSurvey) => {
-            if (survey.name != dBSurvey.name && survey.company != dBSurvey.company) {
-                finalSurveys.push(survey)
+    surveyPyme.map((survey) => {
+        let exist = false;
+        DbSurveys.map((dBSurvey) => {
+            if (survey.cod == dBSurvey.cod) {
+                exist = true;
             }
         })
+
+        if (!exist) {
+            finalSurveys.push(survey)
+        }
     })
     return finalSurveys
 }
 
 app.post('/updateSurvey', (req, res) => {
     // Id is necessary for the update
-    console.log('REQ BODY', req.body)
     let query = { '_id': req.body._id };
 
     Survey.findByIdAndUpdate(query, req.body).then(data => {
-        console.log(data)
         return res.status(201).json({ message: "Succesfully update", data: data })
     }).catch(err => {
         console.log(err)
@@ -179,7 +184,6 @@ app.get('/getSurveys', (req, res) => {
             }
         })
             .then(function (response) {
-                console.log(response)
                 let newResponse = []
 
                 response.data.map((survey, index) => {
@@ -187,17 +191,37 @@ app.get('/getSurveys', (req, res) => {
                     newResponse.push(surveyParse)
                 })
                 Survey.find(function (err, surveys) {
-                    console.log('SURVEYS', surveys.length)
-                    console.log("newResponse", newResponse.length)
                     let newSurveys = excludeExistingSurveys(newResponse, surveys)
-                    console.log(newSurveys.length)
-                    newResponse = newResponse.concat(newSurveys);
-                    return res.status(200).json({ status: 200, data: newResponse, message: "Succesfully Surveys Recieved" });
+                    Survey.insertMany(newSurveys).then(function (data) {
+                        surveys = surveys.concat(data);
+                        return res.status(200).json({ status: 200, data: newResponse, message: "Succesfully Surveys Recieved" });
+                    }).catch(function (error) {
+                        return res.status(400).json({ status: 400, message: error });
+                    });
+
                 })
             })
             .catch(function (error) {
-                console.log(error);
+                return res.status(400).json({ status: 400, message: error });
             })
+    } catch (e) {
+        //Return an Error Response Message with Code and the Error Message.
+        return res.status(400).json({ status: 400, message: e.message });
+    }
+})
+
+app.get('/updateSurvey', (req, res) => {
+
+    try {
+        let query = { 'cod': req.body.cod };
+
+        Survey.findOneAndUpdate(query, req.body).then(data => {
+            console.log(data)
+            return res.status(201).json({ message: "Succesfully update", data: data })
+        }).catch(err => {
+            console.log(err)
+            return res.status(400).json({ status: "error" })
+        })
     } catch (e) {
         //Return an Error Response Message with Code and the Error Message.
         return res.status(400).json({ status: 400, message: e.message });
@@ -208,7 +232,6 @@ app.get('/getUsers', (req, res) => {
 
     try {
         User.find(function (err, users) {
-            console.log(User)
             return res.status(200).json({ status: 200, data: users, message: "Succesfully Users Recieved" });
         })
         // Return the Users list with the appropriate HTTP password Code and Message.
@@ -260,7 +283,6 @@ app.post('/createUser', (req, res) => {
 
 app.post('/updateUser', (req, res) => {
 
-    console.log('REQ BODY', req.body)
     let query = { '_id': req.body._id };
 
     User.findOneAndUpdate(query, req.body).then(data => {
