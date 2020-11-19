@@ -194,7 +194,7 @@ app.get('/getSurveys', (req, res) => {
                     let newSurveys = excludeExistingSurveys(newResponse, surveys)
                     Survey.insertMany(newSurveys).then(function (data) {
                         surveys = surveys.concat(data);
-                        return res.status(200).json({ status: 200, data: newResponse, message: "Succesfully Surveys Recieved" });
+                        return res.status(200).json({ status: 200, data: surveys, message: "Succesfully Surveys Recieved" });
                     }).catch(function (error) {
                         return res.status(400).json({ status: 400, message: error });
                     });
@@ -215,7 +215,7 @@ app.get('/updateSurvey', (req, res) => {
     try {
         let query = { 'cod': req.body.cod };
 
-        Survey.findOneAndUpdate(query, req.body).then(data => {
+        Survey.updateOne(query, req.body).then(data => {
             console.log(data)
             return res.status(201).json({ message: "Succesfully update", data: data })
         }).catch(err => {
