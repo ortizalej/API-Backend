@@ -1,12 +1,11 @@
 const mongoose = require('mongoose')
-var mongoosePaginate = require('mongoose-paginate')
 
 
 const surveySchema = new mongoose.Schema({
-    id: String
+    company: String,
+    name: String
 })
 
-surveySchema.plugin(mongoosePaginate)
 
 
 const Survey = mongoose.model("survey", surveySchema)

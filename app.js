@@ -1,5 +1,3 @@
-var UserService = require('./services/user.service');
-var SurveyService = require('./services/survey.service');
 var cors = require('cors');
 const express = require('express')
 const bodyParser = require("body-parser")
@@ -8,7 +6,7 @@ const http = require('http');
 const axios = require('axios');
 const User = require('./dataModel');
 require('./dataModel')
-// require('./dataModelSurvey')
+require('./dataModelSurvey')
 const app = express()
 const userSchema = mongoose.model('users')
 
