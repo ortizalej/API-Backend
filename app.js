@@ -10,6 +10,7 @@ const app = express()
 const userSchema = mongoose.model('users')
 const surveySchema = mongoose.model('survey')
 const mongouri = 'mongodb+srv://ortizalej:24472872@api.hfxha.mongodb.net/test?retryWrites=true&w=majority';
+const nodemailer = require("nodemailer");
 
 mongoose.connect(mongouri, {
     useNewUrlParser: true,
@@ -158,19 +159,35 @@ app.post('/updateSurvey', (req, res) => {
     })
 })
 
-app.post('/sendEmail', (req, res) => {
-    // Id is necessary for the update
-    console.log('REQ BODY', req.body)
-    let query = { '_id': req.body._id };
+// async..await is not allowed in global scope, must use a wrapper
+async function sendMail(user) {
+    // Generate test SMTP service account from ethereal.email
+    // Only needed if you don't have a real mail account for testing
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        port: 587,
+        auth: {
+            user: 'observatorio.pyme.uade@gmail.com',
+            pass: 'api.2020.2c'
+        }
+    });
 
-    Survey.findOneAndUpdate(query, req.body).then(data => {
-        console.log(data)
-        return res.status(201).json({ message: "Succesfully update", data: data })
-    }).catch(err => {
-        console.log(err)
-        return res.status(400).json({ status: "error" })
-    })
-})
+    transporter.sendMail({
+        from: "observatorio.pyme.uade@gmail.com",
+        to: user.username,
+        subject: "Observatorio PYME - Datos de cuenta",
+        text: "Sus datos de usuario son: Nombre de usuario:" + user.username + " password: " + user.password 
+    }, function (error, response) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("Message sent: " + JSON.stringify(response));
+        }
+    });
+
+}
+
+
 
 app.get('/getSurveys', (req, res) => {
 
@@ -275,7 +292,9 @@ app.post('/createUser', (req, res) => {
     user.save().
         then(data => {
             console.log(data)
+            sendMail(data)
             return res.status(201).json({ message: "Succesfully created", data: data })
+
         }).catch(err => {
             console.log(err)
             return res.status(400).json({ status: "error" })
@@ -288,6 +307,7 @@ app.post('/updateUser', (req, res) => {
 
     User.findOneAndUpdate(query, req.body).then(data => {
         console.log(data)
+        sendMail(req.body)
         return res.status(201).json({ message: "Succesfully created", data: data })
     }).catch(err => {
         console.log(err)
